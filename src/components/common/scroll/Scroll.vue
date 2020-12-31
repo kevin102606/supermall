@@ -36,6 +36,9 @@ export default {
         this.scroll.on('scroll', (position) => {
             this.$emit('scroll', position)
         })
+        this.scroll.on('pullingUp', () => {
+            this.$emit('pullingUp')
+        })
     },
     watch: {},
     methods: {
@@ -44,7 +47,12 @@ export default {
         },
         refresh() {
             this.scroll && this.scroll.refresh()
-            console.log(2);
+        },
+        finishPullUp() {
+            this.scroll && this.scroll.finishPullUp()
+        },
+        getScrollY() {
+            return this.scroll && this.scroll.y
         }
     },
     components: {}

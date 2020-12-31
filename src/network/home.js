@@ -1,14 +1,14 @@
 import { request } from './request'
 
 // 请求首页多种数据
-export function getMultidata() {
+export function getHomeMultidata() {
     return request({
         url: '/home/multidata'
     })
 }
 
 // 请求首页商品数据
-export function getGoods(type, page) {
+export function getHomeGoods(type, page) {
     return request({
         url: '/home/data',
         params: {

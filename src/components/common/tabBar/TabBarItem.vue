@@ -31,7 +31,7 @@ export default {
     watch: {},
     methods: {
         tabClick() {
-            this.$router.push(this.path)
+            this.$router.replace(this.path)
         }
     },
     components: {}

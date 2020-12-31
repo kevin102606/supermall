@@ -1,10 +1,15 @@
 <template>
-    <div class="goods-item">
-        <img :src="goodsItem.show.img" alt="" class="goods-img" @load='imgLoad'>
+    <div class="goods-item" @click="goDetail">
+        <img
+            :src="showImg"
+            alt=""
+            class="goods-img"
+            @load="imgLoad"
+        />
         <div class="goods-info">
-            <p>{{goodsItem.title}}</p>
-            <span>¥{{goodsItem.price}}</span>
-            <span>{{goodsItem.cfav}}</span>
+            <p>{{ goodsItem.title }}</p>
+            <span>¥{{ goodsItem.price }}</span>
+            <span>{{ goodsItem.cfav }}</span>
         </div>
     </div>
 </template>
@@ -22,13 +27,20 @@ export default {
     data() {
         return {}
     },
-    computed: {},
+    computed: {
+        showImg() {
+            return this.goodsItem.image || this.goodsItem.show.img
+        }
+    },
     created() {},
     mounted() {},
     watch: {},
     methods: {
         imgLoad() {
             this.$bus.$emit('imgLoad')
+        },
+        goDetail() {
+            this.$router.push('/detail/' + this.goodsItem.iid)
         }
     },
     components: {}
@@ -36,10 +48,10 @@ export default {
 </script>
 
 <style scope>
-.goods-item{
+.goods-item {
+    position: relative;
     width: 48%;
-    padding-bottom: 15px;
-
+    padding-bottom: 45px;
 }
 
 .goods-img {
@@ -48,9 +60,11 @@ export default {
     vertical-align: middle;
 }
 
-.goods-info  {
-    position: relative;
-    top: 10px;
+.goods-info {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
     font-size: 12px;
     text-align: center;
 }
@@ -59,7 +73,7 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
 }
 
 .goods-info span:nth-child(2) {
