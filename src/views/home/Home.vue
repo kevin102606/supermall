@@ -27,7 +27,7 @@
                 @itemClick="tabClick"
                 ref="tabControl2"
             ></tab-control>
-            <goods-list :goods="goods[currentType].list"></goods-list>
+            <goods-list :goods="showGoods"></goods-list>
         </scroll>
         <back-top v-show="isShowBackTop" @click.native="backTop"></back-top>
     </div>
@@ -42,15 +42,14 @@ import NavBar from 'components/common/navBar/NavBar'
 import TabControl from 'components/content/tabControl/TabControl'
 import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from 'components/common/scroll/Scroll'
-import BackTop from 'components/content/backTop/BackTop'
 
 import { getHomeMultidata, getHomeGoods } from 'network/home'
 
-import { BACK_POSITION } from 'common/const'
-import { debounce } from 'common/utils'
+import { listenImgMixin, backTopMixin } from 'common/mixin'
 
 export default {
     props: {},
+    mixins: [listenImgMixin, backTopMixin],
     data() {
         return {
             banners: [],
@@ -61,13 +60,16 @@ export default {
                 sell: { list: [], page: 0 }
             },
             currentType: 'pop',
-            isShowBackTop: false,
             tabOffsetTop: 0,
             isTabFixed: false,
             saveY: 0
         }
     },
-    computed: {},
+    computed: {
+        showGoods() {
+            return this.goods[this.currentType].list
+        }
+    },
     created() {
         // 请求多种数据
         this.getHomeMultidata()
@@ -76,18 +78,14 @@ export default {
         this.getHomeGoods('new')
         this.getHomeGoods('sell')
     },
-    mounted() {
-        const refresh = debounce(this.$refs.scroll.refresh, 500)
-        this.$bus.$on('imgLoad', () => {
-            refresh()
-        })
-    },
+    mounted() {},
     activated() {
         this.$refs.scroll.scrollTo(0, this.saveY, 0)
         this.$refs.scroll.refresh()
     },
     deactivated() {
         this.saveY = this.$refs.scroll.getScrollY()
+        this.$bus.$off('imgLoad', this.listenImgLoad)
     },
     watch: {},
     methods: {
@@ -108,11 +106,8 @@ export default {
             this.$refs.tabControl2.currentIndex = index
         },
         contentScroll(position) {
-            this.isShowBackTop = -position.y > BACK_POSITION
+            this.listenShowBackTop(position)
             this.isTabFixed = -position.y > this.tabOffsetTop
-        },
-        backTop() {
-            this.$refs.scroll.scrollTo(0, 0)
         },
         loadMore() {
             this.getHomeGoods(
@@ -147,7 +142,6 @@ export default {
         NavBar,
         TabControl,
         GoodsList,
-        BackTop,
         Scroll
     }
 }

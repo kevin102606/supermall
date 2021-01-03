@@ -12,6 +12,7 @@
                 :key="index"
                 :src="item"
                 alt=""
+                @load="imgLoad"
             />
         </div>
     </div>
@@ -28,13 +29,26 @@ export default {
         }
     },
     data() {
-        return {}
+        return {
+            count: 0,
+            imgLength: 0
+        }
     },
     computed: {},
     created() {},
     mounted() {},
-    watch: {},
-    methods: {},
+    watch: {
+        imageInfo(val) {
+            this.imgLength = val.detailImage[0].list.length
+        }
+    },
+    methods: {
+        imgLoad() {
+            if (++this.count === this.imgLength) {
+                this.$emit('detailImgLoad')
+            }
+        }
+    },
     components: {}
 }
 </script>
@@ -61,7 +75,8 @@ export default {
     float: right;
 }
 
-.desc-top::before, .desc-bottom::after {
+.desc-top::before,
+.desc-bottom::after {
     content: '';
     position: absolute;
     bottom: 0;
