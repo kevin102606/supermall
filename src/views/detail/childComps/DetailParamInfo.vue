@@ -9,14 +9,12 @@
                 <td v-for="(td, indez) in tr" :key="indez">{{ td }}</td>
             </tr>
         </table>
-
         <table class="table-info">
             <tr v-for="(item, index) in paramInfo.infos" :key="index">
                 <td>{{ item.key }}</td>
                 <td>{{ item.value }}</td>
             </tr>
         </table>
-
         <div class="img" v-if="paramInfo.images.length !== 0">
             <img :src="paramInfo.images[0]" alt="" />
         </div>

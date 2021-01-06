@@ -1,5 +1,5 @@
 <template>
-    <div class="shop-info">
+    <div class="shop-info" v-if="Object.keys(shop).length !== 0">
         <div class="shop-top">
             <img :src="shop.logo" alt="" />
             <span>{{ shop.name }}</span>
@@ -7,21 +7,25 @@
         <div class="shop-middle">
             <div class="shop-left">
                 <div class="shop-sells">
-                    <span class="sells-num">{{shop.sells | formatSells}}</span>
+                    <span class="sells-num">{{
+                        shop.sells | formatSells
+                    }}</span>
                     <span class="sells-text">总销量</span>
                 </div>
                 <div class="shop-goods">
-                    <span class="goods-num">{{shop.goods}}</span>
+                    <span class="goods-num">{{ shop.goods }}</span>
                     <span class="goods-text">全部宝贝</span>
                 </div>
             </div>
             <div class="shop-right">
                 <table class="shop-score">
                     <tr v-for="(item, index) in shop.score" :key="index">
-                        <td>{{item.name}}</td>
-                        <td :class="{'score-num': item.isBetter}">{{item.score}}</td>
-                        <td :class="{'score-text': item.isBetter}">
-                            <span>{{item.isBetter ? '高' : '低'}}</span>
+                        <td>{{ item.name }}</td>
+                        <td :class="{ 'score-num': item.isBetter }">
+                            {{ item.score }}
+                        </td>
+                        <td :class="{ 'score-text': item.isBetter }">
+                            <span>{{ item.isBetter ? '高' : '低' }}</span>
                         </td>
                     </tr>
                 </table>
@@ -85,7 +89,8 @@ export default {
     margin-top: 15px;
 }
 
-.shop-left, .shop-right {
+.shop-left,
+.shop-right {
     flex: 1;
     text-align: center;
 }
@@ -96,13 +101,15 @@ export default {
     border-right: 1px solid #ccc;
 }
 
-.sells-num, .goods-num {
+.sells-num,
+.goods-num {
     display: block;
     margin-bottom: 5px;
     font-size: 18px;
 }
 
-.sells-text, .goods-text {
+.sells-text,
+.goods-text {
     font-size: 12px;
 }
 
@@ -114,7 +121,7 @@ export default {
     line-height: 25px;
 }
 
-.shop-score  td:nth-child(-n+2) {
+.shop-score td:nth-child(-n + 2) {
     padding: 0 5px;
 }
 
@@ -122,7 +129,7 @@ export default {
     color: var(--color-high-text);
 }
 
-.shop-score tr td:nth-child(3) span{
+.shop-score tr td:nth-child(3) span {
     background-color: green;
     color: #fff;
 }

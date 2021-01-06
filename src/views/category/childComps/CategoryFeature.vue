@@ -6,7 +6,7 @@
             :key="index"
         >
             <a :href="item.link">
-                <img @load="imgLoad" :src="item.image" alt="" />
+                <img @load="imgLoad(index)" :src="item.image" alt="" />
                 <span>{{ item.title }}</span>
             </a>
         </div>
@@ -25,8 +25,8 @@ export default {
     },
     data() {
         return {
-            count: 0,
-            imgLength: 0
+            imgLength: 0,
+            indexList: []
         }
     },
     computed: {},
@@ -38,9 +38,11 @@ export default {
         }
     },
     methods: {
-        imgLoad() {
-            if (++this.count === this.imgLength) {
-                this.$emit('imgLoad')
+        imgLoad(index) {
+            this.indexList.push(index)
+            if (this.imgLength === this.indexList.length) {
+                this.$emit('imgLoad', index)
+                this.indexList = []
             }
         }
     },

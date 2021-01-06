@@ -102,9 +102,7 @@ export default {
     },
     watch: {},
     methods: {
-        ...mapActions([
-            'addToCart'
-        ]),
+        ...mapActions(['addToCart']),
         // 事件监听相关的方法
         detailImgLoad() {
             this.refresh()

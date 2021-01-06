@@ -3,12 +3,24 @@
         <nav-bar class="category-nav">
             <div slot="center">商品分类</div>
         </nav-bar>
+        <tab-control
+            :titles="['流行', '新款', '精选']"
+            @itemClick="tabClick"
+            ref="tabControl1"
+            class="tab-control-first"
+            v-show="isFixed"
+        ></tab-control>
         <div class="category-content">
             <category-menu
                 :category="category"
                 @itemClick="menuClick"
             ></category-menu>
-            <scroll class="subcategory-content" ref="scroll">
+            <scroll
+                class="subcategory-content"
+                ref="scroll"
+                :probe-type="3"
+                @scroll="contentScroll"
+            >
                 <category-feature
                     :category-feature="categoryFeature"
                     @imgLoad="featureImgLoad"
@@ -16,9 +28,11 @@
                 <tab-control
                     :titles="['流行', '新款', '精选']"
                     @itemClick="tabClick"
+                    ref="tabControl2"
                 ></tab-control>
                 <goods-list :goods="categoryRecommend"></goods-list>
             </scroll>
+            <back-top v-show='isShowBackTop' @click.native='backTop'></back-top>
         </div>
     </div>
 </template>
@@ -38,18 +52,23 @@ import {
     getCategoryRecommendData
 } from 'network/category'
 
-import { listenImgMixin } from 'common/mixin'
+import { listenImgMixin, backTopMixin } from 'common/mixin'
 
 export default {
+    name: 'Category',
     props: {},
-    mixins: [listenImgMixin],
+    mixins: [listenImgMixin, backTopMixin],
     data() {
         return {
             category: [],
             currentIndex: 0,
             categoryFeature: [],
             currentType: 'pop',
-            categoryRecommend: []
+            categoryRecommend: [],
+            tabOffsetTopY: 0,
+            isFixed: false,
+            positionY: 0,
+            saveY: 0
         }
     },
     computed: {},
@@ -57,15 +76,19 @@ export default {
         this.getCategoryData(this.currentIndex, this.currentType)
     },
     mounted() {},
+    activated() {
+        this.$refs.scroll.refresh()
+        this.$refs.scroll.scrollTo(0, this.saveY, 0)
+    },
+    deactivated() {
+        this.saveY = this.$refs.scroll.getScrollY()
+    },
     watch: {},
     methods: {
         // 事件监听相关的方法
         menuClick(index) {
             this.currentIndex = index
             this.getCategoryData(this.currentIndex, this.currentType)
-        },
-        featureImgLoad() {
-            this.$refs.scroll.refresh()
         },
         tabClick(index) {
             switch (index) {
@@ -80,8 +103,18 @@ export default {
                     this.currentType = 'sell'
                     break
             }
-            console.log(this.currentType)
             this.getCategoryData(this.currentIndex, this.currentType)
+            this.$refs.tabControl1.currentIndex = index
+            this.$refs.tabControl2.currentIndex = index
+        },
+        contentScroll(position) {
+            this.positionY = -position.y
+            this.isFixed = this.positionY > this.tabOffsetTopY
+            this.listenShowBackTop(position)
+        },
+        featureImgLoad(index) {
+            this.tabOffsetTopY = this.$refs.tabControl2.$el.offsetTop
+            this.isFixed = this.positionY > this.tabOffsetTopY
         },
 
         // 请求数据相关的方法
@@ -101,9 +134,7 @@ export default {
         },
         getCategoryRecommendData(miniWallkey, type) {
             getCategoryRecommendData(miniWallkey, type).then(res => {
-                console.log(res)
                 this.categoryRecommend = res
-                console.log(this.categoryRecommend)
             })
         }
     },
@@ -120,24 +151,38 @@ export default {
 
 <style scoped>
 #category {
+    position: relative;
     height: 100vh;
 }
 
 .category-nav {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     background-color: var(--color-tint);
     color: #fff;
 }
 
 .category-content {
     display: flex;
-    height: calc(100% - 44px - 49px);
+    /* height: calc(100% - 44px - 49px); */
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
 }
 
 .subcategory-content {
     flex: 1;
     height: 100%;
     overflow: hidden;
+}
+
+.tab-control-first {
+    position: absolute;
+    left: 100px;
+    right: 0;
+    z-index: 1;
+    background-color: #fff;
 }
 </style>

@@ -42,6 +42,6 @@ export class Param {
     constructor(info, rule) {
         this.infos = info.set
         this.images = info.images ? info.images : []
-        this.sizes = rule.tables
+        this.sizes = rule ? rule.tables : []
     }
 }

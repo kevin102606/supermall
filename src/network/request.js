@@ -16,7 +16,9 @@ export function request(config) {
     // 响应拦截器
     instance.interceptors.response.use(
         res => res.data,
-        err => err
+        err => {
+            console.log('接口出错啦' + err)
+        }
     )
 
     // 返回请求结果
