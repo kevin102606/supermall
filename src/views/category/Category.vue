@@ -73,6 +73,7 @@ export default {
     },
     computed: {},
     created() {
+        // 获取分类的数据
         this.getCategoryData(this.currentIndex, this.currentType)
     },
     mounted() {},
@@ -123,7 +124,9 @@ export default {
                 this.category = res.data.category.list
                 const maitKey = this.category[index].maitKey
                 const miniWallkey = this.category[index].miniWallkey
+                // 获取子类的数据
                 this.getCategoryFeatureData(maitKey)
+                // 获取子类详情的数据
                 this.getCategoryRecommendData(miniWallkey, type)
             })
         },
