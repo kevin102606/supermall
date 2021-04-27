@@ -13,7 +13,7 @@
 + ES6
 + better-scroll
 + eslint
-+ postcss-px-to-viewport
++ postcss-px-to-viewport 
 
  ### 项目功能：
 
