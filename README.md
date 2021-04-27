@@ -2,7 +2,7 @@
 
 ### 项目说明：
 
-一个Web移动端商城 
+一个Web移动端商城
 
 ### 项目技术栈：
 
@@ -13,7 +13,7 @@
 + ES6
 + better-scroll
 + eslint
-+ postcss-px-to-viewport 
++ postcss-px-to-viewport
 
  ### 项目功能：
 
